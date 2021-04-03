@@ -6,6 +6,7 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
     <span>
       {blocks.map((item, index) => (
         <span
+          key={index}
           className={`fa fa-star ${
             rating >= item ? "text-success" : "text-muted"
           }`}

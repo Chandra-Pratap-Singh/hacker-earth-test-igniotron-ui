@@ -16,14 +16,25 @@ const RestaurantList = () => {
   const [sortingOrder, setSortingOrder] = useState<string>(SORTING_ORDER.DESC);
 
   const searchByBrand = useCallback(
-    (brandName) => {
+    (brandName: string) => {
       setRestaurantList(
         restaurantDataList
-          .map((item) => (item?.Stars ? item : { ...item, Stars: 0 }))
-          .filter((item) => brandName === "" || item.Brand === brandName)
+          .map((item) =>
+            Number?.isFinite(item?.Stars) ? item : { ...item, Stars: 0 }
+          )
+          .filter(
+            (item) =>
+              brandName === "" ||
+              item.Brand.toLowerCase() === brandName.toLowerCase()
+          )
+          .sort((a, b) =>
+            sortingOrder === SORTING_ORDER.ASC
+              ? +a.Stars - +b.Stars
+              : +b.Stars - +a.Stars
+          )
       );
     },
-    [setRestaurantList]
+    [setRestaurantList, sortingOrder]
   );
 
   const toggleSort = useCallback(() => {
@@ -79,7 +90,6 @@ const RestaurantList = () => {
             restaurant={item}
             index={index}
           ></RestaurantCard>
-          // <div key={index}>{item?.Brand}</div>
         ))}
       </section>
     </div>
